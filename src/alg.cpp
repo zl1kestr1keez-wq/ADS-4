@@ -1,10 +1,85 @@
 // Copyright 2021 NNTU-CS
 int countPairs1(int *arr, int len, int value) {
-  return 0;
+  int count = 0;
+  for (int i = 0; i < len; i++) {
+    for (int j = i + 1; j < len; j++) {
+      if (arr[i] + arr[j] == value) {
+        count++;
+      }
+    }
+  }
+  return count;
 }
 int countPairs2(int *arr, int len, int value) {
-  return 0;
+  int count = 0;
+  int left = 0;
+  int right = len - 1;
+  while (left < right) {
+    int sum = arr[left] + arr[right];
+    if (sum == value) {
+      if (arr[left] == arr[right]) {
+        for (int i = left; i < right; i++) {
+          for (int j = i + 1; j <= right; j++) {
+            count++;
+          }
+        }
+        break;
+      } else {
+        int leftCount = 1;
+        while (left + 1 < right && arr[left] == arr[left + 1]) {
+          leftCount++;
+          left++;
+        }
+        int rightCount = 1;
+        while (right - 1 > left && arr[right] == arr[right - 1]) {
+          rightCount++;
+          right--;
+        }
+        count += leftCount * rightCount;
+        left++;
+        right--;
+      }
+    } else if (sum < value) {
+      left++;
+    } else {
+      right--;
+    }
+  }
+  return count;
 }
 int countPairs3(int *arr, int len, int value) {
-  return 0;
+  int count = 0;
+  for (int i = 0; i < len; i++) {
+    int tar = value - arr[i];
+    int left = i + 1, right = len - 1;
+    int first = -1, last = -1;
+    int l = left, r = right;
+    while (l <= r) {
+      int mid = l + (r - l) / 2;
+      if (arr[mid] == tar) {
+        first = mid;
+        r = mid - 1;
+      } else if (arr[mid] < tar) {
+        l = mid + 1;
+      } else {
+        r = mid - 1;
+      }
+    }
+    l = left, r = right;
+    while (l <= r) {
+      int mid = l + (r - l) / 2;
+      if (arr[mid] == tar) {
+        last = mid;
+        l = mid + 1;
+      } else if (arr[mid] < tar) {
+        l = mid + 1;
+      } else {
+        r = mid - 1;
+      }
+    }
+    if (first != -1 && last != -1) {
+      count += (last - first + 1);
+    }
+  }
+  return count;
 }
